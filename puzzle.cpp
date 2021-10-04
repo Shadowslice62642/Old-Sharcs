@@ -43,13 +43,16 @@ void Puzzle::loadStandardMoves() {
 void Puzzle::make_eptable(perm_move<12> doMove[6]) {
     for (uint32_t i = 0; i < 665280; i++) {
         for (int j = 0; j < 6; j++) {
+            //get current cubie configuration for update
             edges_p = decode_edges_p(i);
             doMove[j](edges_p);
-            //std::cout << i * 2 + j / 3 << std::endl;
+            //edges_p coords are 20 bits long so 3 can be packed into one 64-bit entry.
+            //time loss from extraction appears to be outweighed by cache friendliness and sequential calling of new coordinates by pruning tables and solver
             epTable[i * 2 + j / 3] <<= 20;
             epTable[i * 2 + j / 3] += encode_edges_p(edges_p);
         }
     }
+    //save move table for future sessions.
     FILE* f = fopen("ep.table", "wb");
     fwrite(epTable, 8, 1330560, f);
     fclose(f);
@@ -58,17 +61,22 @@ void Puzzle::make_eptable(perm_move<12> doMove[6]) {
 void Puzzle::make_ep2table(perm_move<12> doMove[6]) {
     for (uint32_t i = 0; i < 665280; i++) {
         for (int j = 0; j < 6; j++) {
+            //get current cubie configuration for update
             edges_2_p = decode_edges_2_p(i);
             doMove[j](edges_2_p);
+            //edges_2_p coords are 20 bits long so 3 can be packed into one 64-bit entry.
+            //time loss from extraction appears to be outweighed by cache friendliness and sequential calling of new coordinates by pruning tables and solver
             ep2Table[i * 2 + j / 3] <<= 20;
             ep2Table[i * 2 + j / 3] += encode_edges_2_p(edges_2_p);
         }
     }
+    //save move table for future sessions.
     FILE* f = fopen("ep2.table", "wb");
     fwrite(ep2Table, 8, 1330560, f);
     fclose(f);
 }
 
+//checks for pregenerated move tables. If not found, then generate.
 void Puzzle::loadMoveTables() {
     FILE* f;
     f = fopen("ep.table", "rb");
@@ -119,10 +127,6 @@ void Puzzle::make_eotable(ori_move<12, 2> doMove[6]) {
             edges_o = decode_o<12, 2>(i);
             doMove[j](edges_o);
             eoTable[i * 6 + j] = encode_o<12, 2>(edges_o);
-            /*for (int k = 0; k < 12; k++) {
-                std::cout << (int)edges_o[k] << " ";
-            }
-            std::cout << eoTable[i * 6 + j] << std::endl;*/
         }
     }
     FILE* f = fopen("eo.table", "wb");
@@ -155,27 +159,3 @@ void Puzzle::make_cotable(ori_move<8, 3> doMove[6]) {
     fwrite(coTable, 4, 13122, f);
     fclose(f);
 }
-
-/*template<class Move_t, char piece_count, uint64_t pos_count>
-void Puzzle::makeMoveTable(uint32_t* moveTable,
-                            Move_t moves,
-                            uint32_t (&encode)(std::array<char, piece_count>),
-                            std::array<char, piece_count> (&decode)(uint32_t)) {
-    std::array<char, piece_count> temp;
-    for (uint32_t i = 0; i < pos_count; i++) {
-        for (int j = 0; j < 6; j++) {
-            temp = decode(i);
-            moves[j](&temp);
-            moveTable[i * 6 + j] = encode(temp);
-        }
-    }
-}
-
-void Puzzle::saveMoveTable(uint32_t* table, char* name, uint32_t size) {
-    char* filename = {};
-    strcpy(filename, name);
-    strcat(filename,".table");
-    FILE* f = fopen(filename, "wb");
-    fwrite(table, 4, size, f);
-    fclose(f);
-}*/

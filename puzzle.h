@@ -12,23 +12,32 @@ typedef uint32_t (*corners_decoding_func)(std::array<char, 8>& pieces);
 
 class Puzzle {
 public:
+    //coordinate move tables
     uint64_t* epTable = new uint64_t[1330560];
     uint64_t* ep2Table = new uint64_t[1330560];
     uint32_t* cpTable = new uint32_t[241920];
     uint32_t* eoTable = new uint32_t[12288];
     uint32_t* coTable = new uint32_t[13122];
 
+    //cubie piece arrays
     std::array<char, 12> edges_p;
     std::array<char, 12> edges_o;
     std::array<char, 12> edges_2_p;
     std::array<char, 8> corners_o;
     std::array<char, 8> corners_p;
 
+    //piece coordinates
     uint64_t ep;
     uint64_t ep2;
     uint32_t eo;
     uint32_t cp;
     uint32_t co;
+
+    //cubie moves
+    perm_move<12> epMoves[6];
+    perm_move<8> cpMoves[6];
+    ori_move<12, 2> eoMoves[6];
+    ori_move<8, 3> coMoves[6];
 
     //setup functions
     //initialising (puzzle.cpp)
@@ -46,8 +55,19 @@ public:
     void make_cptable(perm_move<8> doMove[6]);
     void make_cotable(ori_move<8,3> doMove[6]);
     void make_eotable(ori_move<12,2> doMove[6]);
+    template<class move_type, int size>
+    void make_move_table(move_type doMove[6], uint32_t(*encode)(std::array<char, size>), std::array<char, size>(*decode)(uint32_t), uint32_t max_coord, uint32_t* move_table) {
+        std::array<char, size> placeholder;
+        for (uint32_t i = 0; i < max_coord; i++) {
+            for (int j = 0; j < 6; j++) {
+                placeholder = decode(i);
+                doMove[j](placeholder);
+                move_table[i * 6 + j] = encode(placeholder);
+            }
+        }
+    }
 
-    //utilities
+    //utilities (utilities.cpp)
     template<char piece_count>
     void set_pieces(std::vector<int> v, std::array<char, piece_count>& pieces) {
         std::copy(v.begin(), v.end(), pieces.begin());
@@ -56,11 +76,13 @@ public:
     void doMove(int);
 
 
-    //encoding
+    //encoding (encoding.cpp)
     uint32_t encode_edges_p(std::array<char, 12> edges_p);
     uint32_t encode_edges_2_p(std::array<char, 12> edges_p);
+    
     std::array<char, 12> decode_edges_p(uint32_t t);
     std::array<char, 12> decode_edges_2_p(uint32_t t);
+
     template<char piece_count>
     uint32_t encode_p(std::array<char, piece_count> pieces) {
         uint32_t t = 0;
@@ -69,6 +91,19 @@ public:
             for (int j = i + 1; j < piece_count; j++) {
                 if (pieces[i] > pieces[j]) t++;
             }
+        }
+        return t;
+    }
+
+    //same as above but with O(pieces) implementation
+    template<char piece_count>
+    uint32_t encode_p_bitshift(std::array<char, piece_count> pieces) {
+        uint32_t t = 0;
+        uint32_t seen = (1 << pieces) - 2; //set all pieces to seen
+        for (int i = 0; i < piece_count - 1; i++) {
+            seen -= 1 << pieces[i]; // mark current piece as unseen
+            t *= piece_count - i; // break up factorial
+            t += _popcnt64(seen >> pieces[i]);
         }
         return t;
     }
@@ -110,21 +145,4 @@ public:
     }
 
     void coord_move(int);
-
-private:
-
-    perm_move<12> epMoves[6];
-    perm_move<8> cpMoves[6];
-    ori_move<12, 2> eoMoves[6];
-    ori_move<8, 3> coMoves[6];
-
-    edges_encoding_func ep_encode;
-    corners_encoding_func cp_encode;
-    edges_encoding_func eo_encode;
-    corners_encoding_func co_encode;
-
-    edges_decoding_func ep_decode;
-    corners_decoding_func cp_decode;
-    edges_decoding_func eo_decode;
-    corners_decoding_func co_decode;
 };

@@ -1,58 +1,12 @@
 #include "puzzle.h"
+#include <numeric>
 
 void Puzzle::reset() {
-    corners_p[0] = 1;
-    corners_p[1] = 2;
-    corners_p[2] = 3;
-    corners_p[3] = 4;
-    corners_p[4] = 5;
-    corners_p[5] = 6;
-    corners_p[6] = 7;
-    corners_p[7] = 8;
-    corners_o[0] = 0;
-    corners_o[1] = 0;
-    corners_o[2] = 0;
-    corners_o[3] = 0;
-    corners_o[4] = 0;
-    corners_o[5] = 0;
-    corners_o[6] = 0;
-    corners_o[7] = 0;
-    edges_p[0] = 1;
-    edges_p[1] = 2;
-    edges_p[2] = 3;
-    edges_p[3] = 4;
-    edges_p[4] = 5;
-    edges_p[5] = 6;
-    edges_p[6] = 7;
-    edges_p[7] = 7;
-    edges_p[8] = 7;
-    edges_p[9] = 7;
-    edges_p[10] = 7;
-    edges_p[11] = 7;
-    edges_o[0] = 0;
-    edges_o[1] = 0;
-    edges_o[2] = 0;
-    edges_o[3] = 0;
-    edges_o[4] = 0;
-    edges_o[5] = 0;
-    edges_o[6] = 0;
-    edges_o[7] = 0;
-    edges_o[8] = 0;
-    edges_o[9] = 0;
-    edges_o[10] = 0;
-    edges_o[11] = 0;
-    edges_2_p[0] = 6;
-    edges_2_p[1] = 6;
-    edges_2_p[2] = 6;
-    edges_2_p[3] = 6;
-    edges_2_p[4] = 6;
-    edges_2_p[5] = 6;
-    edges_2_p[6] = 7;
-    edges_2_p[7] = 8;
-    edges_2_p[8] = 9;
-    edges_2_p[9] = 10;
-    edges_2_p[10] = 11;
-    edges_2_p[11] = 12;
+    std::iota(corners_p.begin(), corners_p.end(), 1);
+    edges_2_p = { 7, 7, 7, 7, 7, 7, 7, 8, 9, 10, 11, 12 };
+    edges_p = { 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 5, 6 };
+    edges_o = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+    corners_o = { 0, 0, 0, 0, 0, 0, 0, 0 };
     ep = 0;
     ep2 = 0;
     eo = 0;
@@ -96,15 +50,16 @@ void Puzzle::doMove(int i) {
 }
 
 void Puzzle::coord_move(int i) {
+    //extract new coordinate from packed array
     uint64_t ep_mask = (1 << 20) - 1;
-    cp = cpTable[cp * 6 + i];
     ep = epTable[ep * 2 + i / 3];
     ep >>= (20 * (i % 3));
     ep &= ep_mask;
     ep2 = ep2Table[ep2 * 2 + i / 3];
     ep2 >>= (20 * (i % 3));
     ep2 &= ep_mask;
+    //get new coordinates from non-packed arrays
+    cp = cpTable[cp * 6 + i];
     co = coTable[co * 6 + i];
-    //std::cout << eo << std::endl;
     eo = eoTable[eo * 6 + i];
 }

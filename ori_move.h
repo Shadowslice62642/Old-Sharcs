@@ -1,6 +1,6 @@
 #pragma once
 #include <array>
-//maybe change it to take uint and bitshift so not so many arguments
+//maybe change it to take uint64_t and bitshift so not so many arguments
 template<char length, char ori>
 class ori_move
 {
