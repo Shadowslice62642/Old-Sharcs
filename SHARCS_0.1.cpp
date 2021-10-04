@@ -10,9 +10,9 @@ uint64_t seed = std::chrono::system_clock::now().time_since_epoch().count();
 std::mt19937 mt(seed);
 std::uniform_int_distribution<> dist(0, 17);
 
-#include "puzzle.h"
-#include "scramblereader.h"
-#include "solver.h"
+#include "puzzle/puzzle.h"
+#include "./scramble/scramble.h"
+#include "./solver/solver.h"
 
 int main(int argc, char* argv[]) {
     if (argc == 1) {

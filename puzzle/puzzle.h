@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
-#include "perm_move.h"
-#include "ori_move.h"
+#include "../moves/perm_move.h"
+#include "../moves/ori_move.h"
 #include <array>
 #include <vector>
 

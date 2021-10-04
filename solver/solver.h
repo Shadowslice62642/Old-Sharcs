@@ -1,6 +1,6 @@
 #pragma once
 #include <stack>
-#include "Scramble.h"
+#include "../scramble/Scramble.h"
 
 class Solver
 {

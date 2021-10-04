@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include "puzzle.h"
+#include "../puzzle/puzzle.h"
 
 class Scramble {
 public:
