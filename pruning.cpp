@@ -39,7 +39,9 @@ void Solver::make_pruning_table(char* prune_table, uint64_t pos_count, uint64_t 
                         newPositions++;
                     }
                 }
-                puzzle.coord_move(i);
+                //same as in loop but it restores to original so no point looking up
+                puzzle.*coord_2 = puzzle.cpTable[6 * puzzle.*coord_2 + i];
+                puzzle.*coord_1 = puzzle.coTable[6 * puzzle.*coord_1 + i];
             }
         }
         depth++;
