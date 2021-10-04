@@ -14,7 +14,7 @@ class Puzzle {
 public:
     //coordinate move tables
     uint64_t* epTable = new uint64_t[1330560];
-    uint64_t* ep2Table = new uint64_t[1330560];
+    uint64_t* ep2Table = new uint64_t[1330560]; 
     uint32_t* cpTable = new uint32_t[241920];
     uint32_t* eoTable = new uint32_t[12288];
     uint32_t* coTable = new uint32_t[13122];

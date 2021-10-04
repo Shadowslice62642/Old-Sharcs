@@ -12,7 +12,7 @@ void Puzzle::reset() {
     eo = 0;
     cp = 0;
     co = 0;
-}
+} 
 
 void Puzzle::print() {
     std::cout << "corners\n";

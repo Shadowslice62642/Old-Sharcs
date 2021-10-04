@@ -11,7 +11,7 @@ std::mt19937 mt(seed);
 std::uniform_int_distribution<> dist(0, 17);
 
 #include "puzzle/puzzle.h"
-#include "./scramble/scramble.h"
+#include "./scramble/scramble.h" 
 #include "./solver/solver.h"
 
 int main(int argc, char* argv[]) {

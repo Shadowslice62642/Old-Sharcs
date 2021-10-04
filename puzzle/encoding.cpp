@@ -6,7 +6,7 @@ int binomial[31][31] = { {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 
 uint32_t Puzzle::encode_edges_p(std::array<char,12> edges_p) {
     uint32_t x = 0;
-    uint32_t t;
+    uint32_t t; 
     int r, j;
     j = 0;
     t = 0;

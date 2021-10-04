@@ -11,7 +11,7 @@ std::string printableMoveNames[18] = { "U", "U2", "U'", "L", "L2", "L'", "F", "F
 std::string moveNames[18] = { "U", "U2", "U'", "L", "L2", "L'", "F", "F2", "F'", "R", "R2", "R'", "B", "B2", "B'", "D", "D2", "D'" };
 
 Puzzle* readScramble(std::string str) {
-    Puzzle* p = new Puzzle();
+    Puzzle* p = new Puzzle(); 
     std::stringstream stream(str);
     std::string line, setName;
     bool permutation = true;

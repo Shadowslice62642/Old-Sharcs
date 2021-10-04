@@ -19,7 +19,7 @@ public:
 		ori_array[_pos4] = (x + _ori1) % ori;
 	}
 
-private:
+private: 
 	char _pos1;
 	char _pos2;
 	char _pos3;

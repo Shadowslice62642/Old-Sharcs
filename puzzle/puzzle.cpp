@@ -12,7 +12,7 @@ Puzzle::Puzzle() {
 void Puzzle::loadStandardMoves() {
     //cpMoves
     cpMoves[0] = perm_move<8>(0, 3, 2, 1); // U
-    cpMoves[1] = perm_move<8>(4, 7, 6, 5); // D
+    cpMoves[1] = perm_move<8>(4, 7, 6, 5); // D 
     cpMoves[2] = perm_move<8>(2, 3, 6, 7); // R
     cpMoves[3] = perm_move<8>(0, 1, 4, 5); // L
     cpMoves[4] = perm_move<8>(0, 5, 6, 3); // F

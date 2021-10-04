@@ -6,7 +6,7 @@ class Solver
 {
 public:
     Scramble* scramble;
-    Puzzle puzzle;
+    Puzzle puzzle; 
     std::stack<int> soln;
     uint64_t nodes;
     int numSolutions;

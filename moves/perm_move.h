@@ -20,7 +20,7 @@ public:
 		perm_array[_pos4] = x;
 	}
 
-private:
+private: 
 	char _pos1;
 	char _pos2;
 	char _pos3;
